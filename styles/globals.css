@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+ background: #191919;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  background-size: cover;
+  color: #969696;
+}
+
+.coffeeCupWrapper {
+  background-image: url('/images/Yellow_Cup_of_Coffee_PNG_Clipart-551.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+}
+
+:root {
+  --text-gold: #DA9A07;
+}
+
+.bannerSubtext {
+  color: var(--text-gold);
+}
