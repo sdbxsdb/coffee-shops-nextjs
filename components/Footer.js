@@ -2,8 +2,8 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className="fixed bottom-0 flex justify-center items-center w-full py-4">
-      <h5>Footer goes here</h5>
+    <div className="absolute bottom-0 flex items-center justify-center w-full py-4">
+      <h5 className="text-5xl text-yellow-500 animate-bounce">&#x25BC;</h5>
     </div>
   )
 }

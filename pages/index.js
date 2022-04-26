@@ -1,11 +1,11 @@
-import Head from 'next/head'
-import Banner from '../components/Banner'
+import Head from "next/head";
+import Banner from "../components/Banner";
+import Card from "../components/card";
 
 export default function Home() {
-
   const handleOnBannerClick = () => {
-    console.log('Banner button clicked');
-  }
+    console.log("Banner button clicked");
+  };
 
   return (
     <div>
@@ -15,10 +15,33 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      
+      <Banner
+        buttonText="View stores nearby"
+        handleOnClick={handleOnBannerClick}
+      />
 
-      <Banner buttonText='View stores nearby' handleOnClick={handleOnBannerClick}/>
-      
+      <div className='grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3'>
+        <Card
+          name="DarkHorse Coffee"
+          imgUrl="https://source.unsplash.com/random/260x160"
+          href="/coffee-store/darkhorse"
+        />
+        <Card
+          name="Test Coffee"
+          imgUrl="https://source.unsplash.com/random/263x160"
+          href="/coffee-store/test"
+        />
+        <Card
+          name="Another Coffee"
+          imgUrl="https://source.unsplash.com/random/262x160"
+          href="/coffee-store/another"
+        />
+        <Card
+          name="Poop Coffee"
+          imgUrl="https://source.unsplash.com/random/261x160"
+          href="/coffee-store/poop"
+        />
+      </div>
     </div>
-  )
+  );
 }

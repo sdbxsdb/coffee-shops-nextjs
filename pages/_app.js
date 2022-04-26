@@ -1,11 +1,9 @@
 import "../styles/globals.css";
-import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div >
+    <div className="px-12 pb-12">
       <Component {...pageProps} />
-      <Footer />
     </div>
   );
 }

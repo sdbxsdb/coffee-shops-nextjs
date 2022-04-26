@@ -3,20 +3,15 @@
 @tailwind utilities;
 
 body {
+  font-family: 'Raleway', sans-serif;
  background: #191919;
+  background-image: url('/images/mesh-gradient1.png');
   background-repeat: no-repeat;
   min-height: 100vh;
   background-size: cover;
   color: #969696;
 }
 
-.coffeeCupWrapper {
-  background-image: url('/images/Yellow_Cup_of_Coffee_PNG_Clipart-551.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-}
 
 :root {
   --text-gold: #DA9A07;
