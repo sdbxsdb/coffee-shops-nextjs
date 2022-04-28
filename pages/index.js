@@ -6,24 +6,21 @@ import Card from "../components/card";
 export async function getStaticProps(context) {
   console.log("HI getStaticProps");
 
-
- let coffeeStoreData = [];
-
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      Accept: 'application/json',
-      Authorization: 'fsq3bBmHCj2gzkghwhvraQeqX4fQtebJMqEETBAewJqUEzI='
-    }
+      Accept: "application/json",
+      Authorization: process.env.FOURSQUARE_AUTH_TOKEN,
+    },
   };
-  
-  const response = await fetch('https://api.foursquare.com/v3/places/search?query=coffee%20shop&near=belfast&limit=6', options)
-  
+
+  const response = await fetch(
+    "https://api.foursquare.com/v3/places/search?query=coffee%20shop&near=belfast&limit=6",
+    options
+  );
+
   const data = await response.json();
   console.log("DATA -", data);
-
-
-
 
   return {
     props: {
@@ -61,7 +58,10 @@ export default function Home(props) {
                 <Card
                   key={coffeeStore.fsq_id}
                   name={coffeeStore.name}
-                  imgUrl={coffeeStore.imgUrl || 'https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80'} 
+                  imgUrl={
+                    coffeeStore.imgUrl ||
+                    "https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"
+                  }
                   href={`/coffee-store/` + `${coffeeStore.name}`}
                 />
               );
