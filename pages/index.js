@@ -1,10 +1,14 @@
 import Head from "next/head";
 import Banner from "../components/Banner";
 import Card from "../components/card";
-import coffeeStoresData from "../data/coffee-stores.json";
+// import coffeeStoresData from "../data/coffee-stores.json";
 
 export async function getStaticProps(context) {
   console.log("HI getStaticProps");
+
+
+ let coffeeStoreData = [];
+
   const options = {
     method: 'GET',
     headers: {
@@ -12,18 +16,24 @@ export async function getStaticProps(context) {
       Authorization: 'fsq3bBmHCj2gzkghwhvraQeqX4fQtebJMqEETBAewJqUEzI='
     }
   };
+  
+  const response = await fetch('https://api.foursquare.com/v3/places/search?query=coffee%20shop&near=belfast&limit=6', options)
+  
+  const data = await response.json();
+  console.log("DATA -", data);
+
+
+
+
   return {
     props: {
-      coffeeStores: fetch('https://api.foursquare.com/v3/places/search?query=coffee%20shop&near=belfast', options)
-      .then(response => response.json())
-      .then(response => console.log(response))
-      .catch(err => console.error(err))
+      coffeeStores: data.results
     },
   };
 }
 
 export default function Home(props) {
-  console.log("PROPS -", props);
+  // console.log("PROPS -", props);
   const handleOnBannerClick = () => {
     console.log("Banner button clicked");
   };
@@ -49,10 +59,10 @@ export default function Home(props) {
             {props.coffeeStores.map((coffeeStore) => {
               return (
                 <Card
-                  key={coffeeStore.id}
+                  key={coffeeStore.fsq_id}
                   name={coffeeStore.name}
-                  imgUrl={coffeeStore.imgUrl}
-                  href={`/coffee-store/` + `${coffeeStore.id}`}
+                  imgUrl={coffeeStore.imgUrl || 'https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80'} 
+                  href={`/coffee-store/` + `${coffeeStore.name}`}
                 />
               );
             })}
