@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import coffeeStores from "../data/coffee-stores.json";
 
 const Banner = (props) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -7,7 +8,7 @@ const Banner = (props) => {
   useEffect(() => {
     window.addEventListener("scroll", listenToScroll);
     return () => window.removeEventListener("scroll", listenToScroll);
-  }, []);
+  });
 
   const listenToScroll = () => {
     let heightToHideFrom = 100;
@@ -27,7 +28,7 @@ const Banner = (props) => {
       <div className="flex flex-col items-center justify-center w-full h-1/2 md:h-full md:items-start md:w-1/2">
         <h1 className="text-3xl font-bold">
           <span className="text-[#DA9A07]">Coffee</span>{" "}
-          <span className="text-blue-300">Connoisseur</span>
+          <span className="text-blue-400">Connoisseur</span>
         </h1>
         <p className="bannerSubtext">Discover your local coffee shops</p>
         <div className="mt-12">
@@ -48,13 +49,15 @@ const Banner = (props) => {
         />
       </div>
 
-      <div
-        className={`${
-          isVisible ? "opcaity-0" : "opacity-0"
-        } absolute bottom-0 flex items-center justify-center w-full py-4 transition-all duration-300 ease-in-out `}
-      >
-        <h5 className="text-5xl text-yellow-500 animate-bounce">&#x25BC;</h5>
-      </div>
+      {coffeeStores.length > 0 && (
+          <div
+            className={`${
+              isVisible ? "opacity-100" : "opacity-0"
+            } absolute bottom-0 left-1/2 transform -translate-x-1/2 py-4 transition-all duration-300 ease-in-out `}
+          >
+            <h5 className="text-5xl text-yellow-500 animate-bounce">&#x25BC;</h5>
+          </div>
+      )}
     </div>
   );
 };

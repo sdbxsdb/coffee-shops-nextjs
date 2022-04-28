@@ -1,8 +1,29 @@
 import Head from "next/head";
 import Banner from "../components/Banner";
 import Card from "../components/card";
+import coffeeStoresData from "../data/coffee-stores.json";
 
-export default function Home() {
+export async function getStaticProps(context) {
+  console.log("HI getStaticProps");
+  const options = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'fsq3bBmHCj2gzkghwhvraQeqX4fQtebJMqEETBAewJqUEzI='
+    }
+  };
+  return {
+    props: {
+      coffeeStores: fetch('https://api.foursquare.com/v3/places/search?query=coffee%20shop&near=belfast', options)
+      .then(response => response.json())
+      .then(response => console.log(response))
+      .catch(err => console.error(err))
+    },
+  };
+}
+
+export default function Home(props) {
+  console.log("PROPS -", props);
   const handleOnBannerClick = () => {
     console.log("Banner button clicked");
   };
@@ -20,28 +41,24 @@ export default function Home() {
         handleOnClick={handleOnBannerClick}
       />
 
-      <div className='grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3'>
-        <Card
-          name="DarkHorse Coffee"
-          imgUrl="https://source.unsplash.com/random/260x160"
-          href="/coffee-store/darkhorse"
-        />
-        <Card
-          name="Test Coffee"
-          imgUrl="https://source.unsplash.com/random/263x160"
-          href="/coffee-store/test"
-        />
-        <Card
-          name="Another Coffee"
-          imgUrl="https://source.unsplash.com/random/262x160"
-          href="/coffee-store/another"
-        />
-        <Card
-          name="Poop Coffee"
-          imgUrl="https://source.unsplash.com/random/261x160"
-          href="/coffee-store/poop"
-        />
-      </div>
+      {props.coffeeStores.length > 0 && (
+        <>
+          <h2 className="text-3xl font-bold text-[#DA9A07]">Local Stores</h2>
+
+          <div className="grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3 pb-12">
+            {props.coffeeStores.map((coffeeStore) => {
+              return (
+                <Card
+                  key={coffeeStore.id}
+                  name={coffeeStore.name}
+                  imgUrl={coffeeStore.imgUrl}
+                  href={`/coffee-store/` + `${coffeeStore.id}`}
+                />
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
