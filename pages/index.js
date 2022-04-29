@@ -36,7 +36,7 @@ export default function Home({ coffeeStores }) {
 
       {coffeeStores.length > 0 && (
         <>
-          <h2 className="text-3xl font-bold text-[#DA9A07]">Local Stores</h2>
+          <h2 className="text-3xl font-bold text-[#DA9A07]">Galway Shops</h2>
 
           <div className="grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3 pb-12">
             {coffeeStores.map((coffeeStore) => {

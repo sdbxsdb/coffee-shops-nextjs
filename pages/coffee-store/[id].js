@@ -43,7 +43,7 @@ const CoffeeStore = (props) => {
     return <div>Loading...</div>;
   }
 
-  const { name, location, neighbourhood, imgUrl } = props.coffeeStore;
+  const { name, location, imgUrl } = props.coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log("Upvote button clicked");
