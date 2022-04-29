@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
-import { fetchCoffeeStores } from "../../lib/coffee-stores"; 
+import { fetchCoffeeStores } from "../../lib/coffee-stores";
 
 export async function getStaticProps(staticProps) {
   const params = staticProps.params;
@@ -43,11 +43,11 @@ const CoffeeStore = (props) => {
     return <div>Loading...</div>;
   }
 
-  const { name, address, neighbourhood, imgUrl } = props.coffeeStore;
+  const { name, location, neighbourhood, imgUrl } = props.coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log("Upvote button clicked");
-  }
+  };
 
   return (
     <>
@@ -56,11 +56,12 @@ const CoffeeStore = (props) => {
       </Head>
 
       <div className="mt-12 ">
-
         <div className="mb-12 max-w-max hover:-ml-2 transition-all duration-300 ease-in-out active:scale-95">
           <Link href="/">
             <a className="text-blue-500 font-bold flex items-center gap-2 max-w-max">
-              <span className='-rotate-[50deg] max-w-max font-bold'>&#8598;</span> 
+              <span className="-rotate-[50deg] max-w-max font-bold">
+                &#8598;
+              </span>
               Back to home
             </a>
           </Link>
@@ -70,22 +71,30 @@ const CoffeeStore = (props) => {
           <div className="mb-12 flex flex-col md:flex-row justify-between items-center gap-x-4">
             <div className="flex flex-1 flex-col text-center md:text-left">
               <h1 className="text-3xl text-yellow-500 font-bold">{name}</h1>
-              <p className="text-blue-500">
-                {address} - {neighbourhood}
-              </p>
+              <span className="text-blue-500 font-bold">{location.address}</span>
+              {location.neighborhood && (
+                <span className="text-blue-500 font-bold"> {location.neighborhood}</span>
+              )}
             </div>
+
             <div className="bg-white mt-4 md:mt-0  w-full md:w-4/12 flex flex-col items-center justify-center bg-opacity-50 p-4 rounded-2xl pointer-events-none hover:bg-opacity-100">
-              <button className="p-4 font-bold w-full text-white transition-all duration-300 ease-in-out bg-blue-400 rounded active:border-white active:bg-blue-500 active:scale-95 mb-4 pointer-events-auto" onClick={handleUpvoteButton}>
+              <button
+                className="p-4 font-bold w-full text-white transition-all duration-300 ease-in-out bg-blue-400 rounded active:border-white active:bg-blue-500 active:scale-95 mb-4 pointer-events-auto"
+                onClick={handleUpvoteButton}
+              >
                 Up Vote!
               </button>
-              <span className='text-3xl font-bold text-yellow-500'>3</span>
+              <span className="text-3xl font-bold text-yellow-500">3</span>
             </div>
           </div>
 
           <div className="h-[500px] relative">
             <Image
               className="rounded-2xl"
-              src={imgUrl || 'https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80'}
+              src={
+                imgUrl ||
+                "https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"
+              }
               alt={name}
               layout="fill"
               objectFit="cover"
