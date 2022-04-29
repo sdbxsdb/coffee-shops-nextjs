@@ -1,35 +1,20 @@
 import Head from "next/head";
 import Banner from "../components/Banner";
 import Card from "../components/card";
-// import coffeeStoresData from "../data/coffee-stores.json";
+import { fetchCoffeeStores } from "../lib/coffee-stores";
 
 export async function getStaticProps(context) {
-  console.log("HI getStaticProps");
-
-  const options = {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: process.env.FOURSQUARE_AUTH_TOKEN,
-    },
-  };
-
-  const response = await fetch(
-    "https://api.foursquare.com/v3/places/search?query=coffee%20shop&near=belfast&limit=6",
-    options
-  );
-
-  const data = await response.json();
-  console.log("DATA -", data);
+  const coffeeStores = await fetchCoffeeStores();
+  console.log(coffeeStores);
 
   return {
     props: {
-      coffeeStores: data.results
+      coffeeStores,
     },
   };
 }
 
-export default function Home(props) {
+export default function Home({ coffeeStores }) {
   // console.log("PROPS -", props);
   const handleOnBannerClick = () => {
     console.log("Banner button clicked");
@@ -48,27 +33,37 @@ export default function Home(props) {
         handleOnClick={handleOnBannerClick}
       />
 
-      {props.coffeeStores.length > 0 && (
+
+      {coffeeStores.length > 0 && (
         <>
           <h2 className="text-3xl font-bold text-[#DA9A07]">Local Stores</h2>
 
           <div className="grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3 pb-12">
-            {props.coffeeStores.map((coffeeStore) => {
+            {coffeeStores.map((coffeeStore) => {
               return (
                 <Card
-                  key={coffeeStore.fsq_id}
+                  key={coffeeStore.id}
                   name={coffeeStore.name}
                   imgUrl={
                     coffeeStore.imgUrl ||
                     "https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"
                   }
-                  href={`/coffee-store/` + `${coffeeStore.name}`}
+                  href={`/coffee-store/` + `${coffeeStore.fsq_id}`}
                 />
               );
             })}
           </div>
         </>
       )}
+
+
+      {coffeeStores.length  == 0 && (
+        <>
+          <h2 className="text-3xl font-bold text-[#DA9A07]">Nothing Found</h2>
+        </>
+      )}
+
+      
     </div>
   );
 }

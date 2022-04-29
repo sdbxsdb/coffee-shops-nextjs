@@ -2,27 +2,28 @@ import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
-import coffeeStoresData from "../../data/coffee-stores.json";
 import Image from "next/image";
+import { fetchCoffeeStores } from "../../lib/coffee-stores"; 
 
-export function getStaticProps(staticProps) {
+export async function getStaticProps(staticProps) {
   const params = staticProps.params;
-  console.log("PARAMS -", params);
 
+  const coffeeStores = await fetchCoffeeStores();
   return {
     props: {
-      coffeeStore: coffeeStoresData.find((coffeeStore) => {
-        return coffeeStore.id.toString() === params.id; //dyamnamic id
+      coffeeStore: coffeeStores.find((coffeeStore) => {
+        return coffeeStore.fsq_id.toString() === params.id; //dyamnamic id
       }),
     },
   };
 }
 
-export function getStaticPaths() {
-  const paths = coffeeStoresData.map((coffeeStore) => {
+export async function getStaticPaths() {
+  const coffeeStores = await fetchCoffeeStores();
+  const paths = coffeeStores.map((coffeeStore) => {
     return {
       params: {
-        id: coffeeStore.id.toString(),
+        id: coffeeStore.fsq_id.toString(),
       },
     };
   });
@@ -84,7 +85,7 @@ const CoffeeStore = (props) => {
           <div className="h-[500px] relative">
             <Image
               className="rounded-2xl"
-              src={imgUrl}
+              src={imgUrl || 'https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80'}
               alt={name}
               layout="fill"
               objectFit="cover"
