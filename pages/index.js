@@ -2,6 +2,8 @@ import Head from "next/head";
 import Banner from "../components/Banner";
 import Card from "../components/card";
 import { fetchCoffeeStores } from "../lib/coffee-stores";
+import useTrackLocation from "../hooks/use-track-location";
+import { useEffect } from "react";
 
 export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores();
@@ -14,10 +16,34 @@ export async function getStaticProps(context) {
   };
 }
 
-export default function Home({ coffeeStores }) {
-  // console.log("PROPS -", props);
-  const handleOnBannerClick = () => {
-    console.log("Banner button clicked");
+export default function Home(props) {
+  const {
+    handleTrackLocation,
+    locationErrorMsg,
+    latLong,
+    isFindingLocation,
+    setLocationErrorMsg,
+  } = useTrackLocation();
+
+  useEffect(() => {
+    async function fetchData() {
+          if (latLong) {
+    try {
+      const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 30);
+      console.log("fetchCoffeeStores - ", fetchedCoffeeStores);
+      console.log("latLong - ", latLong);
+
+      //set coffee stores
+    } catch (err) {
+      console.log("err - ", err);
+    }
+  }
+    };
+    fetchData();
+}, [latLong]);
+
+  const handleOnBannerBtnClick = () => {
+    handleTrackLocation();
   };
 
   return (
@@ -29,20 +55,36 @@ export default function Home({ coffeeStores }) {
       </Head>
 
       <Banner
-        buttonText="View stores nearby"
-        handleOnClick={handleOnBannerClick}
+        buttonText={isFindingLocation ? "Locating..." : "View stores nearby"}
+        handleOnClick={handleOnBannerBtnClick}
       />
 
+      {locationErrorMsg && (
+        <div className="bg-black bg-opacity-50 w-screen h-full overflow-hidden fixed z-50 sc top-0 left-0 text-white">
+          <div className="bg-black p-12 text-white absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-y-4 rounded-2xl">
+            <p className="text-center">
+              Something went wrong:{" "}
+              <p className="text-center">{locationErrorMsg}</p>
+            </p>
+            <button
+              className="p-4 font-bold text-white transition-all duration-300 ease-in-out bg-blue-400 border-2 border-transparent rounded active:border-white active:bg-blue-500 active:scale-95"
+              onClick={() => setLocationErrorMsg("")}
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      )}
 
-      {coffeeStores.length > 0 && (
+      {props.coffeeStores.length > 0 && (
         <>
           <h2 className="text-3xl font-bold text-[#DA9A07]">Galway Shops</h2>
 
           <div className="grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3 pb-12">
-            {coffeeStores.map((coffeeStore) => {
+            {props.coffeeStores.map((coffeeStore) => {
               return (
                 <Card
-                  key={coffeeStore.id}
+                  key={coffeeStore.fsq_id}
                   name={coffeeStore.name}
                   imgUrl={
                     coffeeStore.imgUrl ||
@@ -56,14 +98,11 @@ export default function Home({ coffeeStores }) {
         </>
       )}
 
-
-      {coffeeStores.length  == 0 && (
+      {props.coffeeStores.length == 0 && (
         <>
           <h2 className="text-3xl font-bold text-[#DA9A07]">Nothing Found</h2>
         </>
       )}
-
-      
     </div>
   );
 }

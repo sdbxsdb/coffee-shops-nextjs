@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import coffeeStores from "../data/coffee-stores.json";
 
+
+
 const Banner = (props) => {
+
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -38,6 +41,7 @@ const Banner = (props) => {
           >
             {props.buttonText}
           </button>
+                  
         </div>
       </div>
       <div className="w-full max-h-[300px] min-w-[200px] md:min-h-screen h-full md:h-1/2 md:w-1/2 relative">
