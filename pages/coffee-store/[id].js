@@ -9,11 +9,12 @@ export async function getStaticProps(staticProps) {
   const params = staticProps.params;
 
   const coffeeStores = await fetchCoffeeStores();
+  const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+    return coffeeStore.fsq_id.toString() === params.id; //dyamnamic id
+  })
   return {
     props: {
-      coffeeStore: coffeeStores.find((coffeeStore) => {
-        return coffeeStore.fsq_id.toString() === params.id; //dyamnamic id
-      }),
+      coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
     },
   };
 }
@@ -43,7 +44,9 @@ const CoffeeStore = (props) => {
     return <div>Loading...</div>;
   }
 
-  const { name, location, imgUrl } = props.coffeeStore;
+  const { name = 'Not found', location = '', imgUrl } = props.coffeeStore;
+
+  
 
   const handleUpvoteButton = () => {
     console.log("Upvote button clicked");

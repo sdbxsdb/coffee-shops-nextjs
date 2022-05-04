@@ -3,7 +3,8 @@ import Banner from "../components/Banner";
 import Card from "../components/card";
 import { fetchCoffeeStores } from "../lib/coffee-stores";
 import useTrackLocation from "../hooks/use-track-location";
-import { useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ACTION_TYPES, StoreContext} from './_app';
 
 export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores();
@@ -17,30 +18,44 @@ export async function getStaticProps(context) {
 }
 
 export default function Home(props) {
+  
   const {
     handleTrackLocation,
     locationErrorMsg,
-    latLong,
     isFindingLocation,
     setLocationErrorMsg,
   } = useTrackLocation();
 
+  // const [coffeeStores, setCoffeeStores] = useState("");
+  const [coffeeStoresError, setCoffeeStoresError] = useState(null);
+
+  const { dispatch, state } = useContext(StoreContext);
+
+  const {coffeeStores, latLong } = state;
+
   useEffect(() => {
     async function fetchData() {
-          if (latLong) {
-    try {
-      const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 30);
-      console.log("fetchCoffeeStores - ", fetchedCoffeeStores);
-      console.log("latLong - ", latLong);
-
-      //set coffee stores
-    } catch (err) {
-      console.log("err - ", err);
+      if (latLong) {
+        try {
+          const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 30);
+          console.log("latLong - ", latLong);
+          console.log("fetchCoffeeStores - ", fetchedCoffeeStores);
+          dispatch({
+            type: ACTION_TYPES.SET_COFFEE_STORES,
+            payload: { 
+              coffeeStores: fetchedCoffeeStores,
+            }
+          })
+          // setCoffeeStores(fetchedCoffeeStores);
+          //set coffee stores
+        } catch (err) {
+          setCoffeeStoresError(err.message);
+          console.log("err - ", err);
+        }
+      }
     }
-  }
-    };
     fetchData();
-}, [latLong]);
+  }, [latLong]);
 
   const handleOnBannerBtnClick = () => {
     handleTrackLocation();
@@ -74,6 +89,45 @@ export default function Home(props) {
             </button>
           </div>
         </div>
+      )}
+
+      {coffeeStoresError && (
+        <div className="bg-black bg-opacity-50 w-screen h-full overflow-hidden fixed z-50 sc top-0 left-0 text-white">
+          <div className="bg-black p-12 text-white absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-y-4 rounded-2xl">
+            <p className="text-center">
+              Something went wrong:{" "}
+              <p className="text-center">{coffeeStoresError}</p>
+            </p>
+            <button
+              className="p-4 font-bold text-white transition-all duration-300 ease-in-out bg-blue-400 border-2 border-transparent rounded active:border-white active:bg-blue-500 active:scale-95"
+              onClick={() => setLocationErrorMsg("")}
+            >
+              Try again
+            </button>
+          </div>
+        </div>
+      )}
+
+      {coffeeStores.length > 0 && (
+        <>
+          <h2 className="text-3xl font-bold text-[#DA9A07]">Stores near you</h2>
+
+          <div className="grid grid-cols-1 gap-4 mt-12 sm:grid-cols-2 md:grid-cols-3 pb-12">
+            {coffeeStores.map((coffeeStore) => {
+              return (
+                <Card
+                  key={coffeeStore.fsq_id}
+                  name={coffeeStore.name}
+                  imgUrl={
+                    coffeeStore.imgUrl ||
+                    "https://images.unsplash.com/photo-1498804103079-a6351b050096?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2468&q=80"
+                  }
+                  href={`/coffee-store/` + `${coffeeStore.fsq_id}`}
+                />
+              );
+            })}
+          </div>
+        </>
       )}
 
       {props.coffeeStores.length > 0 && (
