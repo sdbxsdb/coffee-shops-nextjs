@@ -40,20 +40,20 @@ export async function getStaticPaths() {
 const CoffeeStore = (initialProps) => {
   const router = useRouter();
   
+  const id = router.query.id;
 
-  const id = router.query.fsq_id;
+  console.log('rotuer -', router.query.id);
 
   const [coffeeStore, setCoffeeStore] = useState(
-    initialProps.coffeeStore
+    initialProps.coffeeStore || {}
   );
 
-
   const {
-    state: { coffeeStores },
+    state: { coffeeStores, latLong }, 
   } = useContext(StoreContext);
 
-  console.log('TEST - ', coffeeStores);
-  console.log('STATE - ', state);
+  console.log('Coffee Stores - ', coffeeStores);
+  console.log('latLong - ', latLong);
 
   useEffect(() => {
     if (isEmpty(initialProps.coffeeStore)) {
@@ -64,7 +64,7 @@ const CoffeeStore = (initialProps) => {
         setCoffeeStore(findCoffeeStoreById);
       }
     }
-  }, [id]);
+  }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
 
 
   if (router.isFallback) {

@@ -39,13 +39,15 @@ export default function Home(props) {
       if (latLong) {
         try {
           const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 30);
-          console.log("fetchCoffeeStores - ", fetchedCoffeeStores);
+          console.log("fetchCoffeeStores from Index file - ", fetchedCoffeeStores);
+        
           dispatch({
             type: ACTION_TYPES.SET_COFFEE_STORES,
             payload: { 
               coffeeStores: fetchedCoffeeStores,
             }
           })
+          
           // setCoffeeStores(fetchedCoffeeStores);
           //set coffee stores
         } catch (err) {
@@ -55,7 +57,7 @@ export default function Home(props) {
       }
     }
     fetchData();
-  }, [latLong]);
+  }, [latLong, dispatch]);
 
   const handleOnBannerBtnClick = () => {
     handleTrackLocation();
