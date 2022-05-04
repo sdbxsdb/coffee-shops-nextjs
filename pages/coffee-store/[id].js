@@ -1,9 +1,11 @@
-import React from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
 import { fetchCoffeeStores } from "../../lib/coffee-stores";
+import { StoreContext } from "../_app";
+import { isEmpty } from "../../utils/index";
 
 export async function getStaticProps(staticProps) {
   const params = staticProps.params;
@@ -11,7 +13,7 @@ export async function getStaticProps(staticProps) {
   const coffeeStores = await fetchCoffeeStores();
   const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
     return coffeeStore.fsq_id.toString() === params.id; //dyamnamic id
-  })
+  });
   return {
     props: {
       coffeeStore: findCoffeeStoreById ? findCoffeeStoreById : {},
@@ -35,18 +37,43 @@ export async function getStaticPaths() {
   };
 }
 
-const CoffeeStore = (props) => {
+const CoffeeStore = (initialProps) => {
   const router = useRouter();
-  // console.log("ROUTER -", router);
-  // console.log("PRops -", props);
+  
+
+  const id = router.query.fsq_id;
+
+  const [coffeeStore, setCoffeeStore] = useState(
+    initialProps.coffeeStore
+  );
+
+
+  const {
+    state: { coffeeStores },
+  } = useContext(StoreContext);
+
+  console.log('TEST - ', coffeeStores);
+  console.log('STATE - ', state);
+
+  useEffect(() => {
+    if (isEmpty(initialProps.coffeeStore)) {
+      if (coffeeStores.length > 0) {
+        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+          return coffeeStore.fsq_id.toString() === id; //dyamnamic id
+        });
+        setCoffeeStore(findCoffeeStoreById);
+      }
+    }
+  }, [id]);
+
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
-  const { name = 'Not found', location = '', imgUrl } = props.coffeeStore;
+  const { name, location, imgUrl } = coffeeStore;
 
-  
+
 
   const handleUpvoteButton = () => {
     console.log("Upvote button clicked");
@@ -73,10 +100,15 @@ const CoffeeStore = (props) => {
         <div>
           <div className="mb-12 flex flex-col md:flex-row justify-between items-center gap-x-4">
             <div className="flex flex-1 flex-col text-center md:text-left">
-              <h1 className="text-3xl text-yellow-500 font-bold">{name}</h1>
-              <span className="text-blue-500 font-bold">{location.address}</span>
-              {location.neighborhood && (
-                <span className="text-blue-500 font-bold"> {location.neighborhood}</span>
+              <h1 className="text-3xl text-yellow-500 font-bold">{name || 'test'}</h1>
+              <span className="text-blue-500 font-bold">
+                {location?.address}
+              </span>
+              {location?.neighborhood && (
+                <span className="text-blue-500 font-bold">
+                  {" "}
+                  {location?.neighborhood}
+                </span>
               )}
             </div>
 

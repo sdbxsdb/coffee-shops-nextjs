@@ -6,6 +6,7 @@ import useTrackLocation from "../hooks/use-track-location";
 import { useState, useEffect, useContext } from "react";
 import { ACTION_TYPES, StoreContext} from './_app';
 
+
 export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores();
   console.log(coffeeStores);
@@ -18,7 +19,7 @@ export async function getStaticProps(context) {
 }
 
 export default function Home(props) {
-  
+
   const {
     handleTrackLocation,
     locationErrorMsg,
@@ -31,14 +32,13 @@ export default function Home(props) {
 
   const { dispatch, state } = useContext(StoreContext);
 
-  const {coffeeStores, latLong } = state;
+  const { coffeeStores, latLong } = state;
 
   useEffect(() => {
     async function fetchData() {
       if (latLong) {
         try {
           const fetchedCoffeeStores = await fetchCoffeeStores(latLong, 30);
-          console.log("latLong - ", latLong);
           console.log("fetchCoffeeStores - ", fetchedCoffeeStores);
           dispatch({
             type: ACTION_TYPES.SET_COFFEE_STORES,
