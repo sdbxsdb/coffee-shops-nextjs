@@ -30,9 +30,9 @@ const StoreProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(storeReducer, initialState);
 
-  console.log('STATE - ', state);
-  console.log('Initialstate - ', initialState);
-  console.log('children - ', children);
+  // console.log('STATE - ', state);
+  // console.log('Initialstate - ', initialState);
+  // console.log('children - ', children);
 
   return (
     <StoreContext.Provider value={{ state, dispatch }}>

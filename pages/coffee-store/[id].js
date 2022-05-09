@@ -39,45 +39,67 @@ export async function getStaticPaths() {
 
 const CoffeeStore = (initialProps) => {
   const router = useRouter();
-  
-  const id = router.query.id;
 
-  console.log('rotuer -', router.query.id);
+  const id = router.query.id;
 
   const [coffeeStore, setCoffeeStore] = useState(
     initialProps.coffeeStore || {}
   );
 
   const {
-    state: { coffeeStores, latLong }, 
+    state: { coffeeStores },
   } = useContext(StoreContext);
 
-  const handleCreateCoffeeStore = async () => {
+  const handleCreateCoffeeStore = async (coffeeStore) => {
     try {
-      const response = await fetch('/api/createCoffeeStore')
+
+      const { fsq_id, name, voting, imgUrl, location, address  } = coffeeStore;
+      
+      console.log('COFFEE STORE-', coffeeStore);
+      console.log('LOCATION-', location);
+
+      const response = await fetch("/api/createCoffeeStore", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: fsq_id,
+          name,
+          voting: 0,
+          imgUrl,
+          neighborhood: location?.neighborhood?.[0] || "No neighborhood",
+          address: location?.address,
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+      console.log({dbCoffeeStore});
     } catch (err) {
-      console.error('Error creating coffee store', err);
+      console.error("Error creating coffee store", err);
     }
-  }
+  };
 
   useEffect(() => {
     if (isEmpty(initialProps.coffeeStore)) {
       if (coffeeStores.length > 0) {
-        const findCoffeeStoreById = coffeeStores.find((coffeeStore) => {
+        const coffeeStoreFromContext = coffeeStores.find((coffeeStore) => {
           return coffeeStore.fsq_id.toString() === id; //dyamnamic id
         });
-        setCoffeeStore(findCoffeeStoreById);
+
+        if (coffeeStoreFromContext) {
+          setCoffeeStore(coffeeStoreFromContext);
+          handleCreateCoffeeStore(coffeeStoreFromContext);
+        }
       }
     }
   }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
-
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
   const { name, location, imgUrl } = coffeeStore;
-
 
   const handleUpvoteButton = () => {
     console.log("Upvote button clicked");
@@ -104,7 +126,9 @@ const CoffeeStore = (initialProps) => {
         <div>
           <div className="mb-12 flex flex-col md:flex-row justify-between items-center gap-x-4">
             <div className="flex flex-1 flex-col text-center md:text-left">
-              <h1 className="text-3xl text-yellow-500 font-bold">{name || 'test'}</h1>
+              <h1 className="text-3xl text-yellow-500 font-bold">
+                {name || "test"}
+              </h1>
               <span className="text-blue-500 font-bold">
                 {location?.address}
               </span>
@@ -123,7 +147,7 @@ const CoffeeStore = (initialProps) => {
               >
                 Up Vote!
               </button>
-              <span className="text-3xl font-bold text-yellow-500">3</span>
+              <span className="text-3xl font-bold text-yellow-500">0</span>
             </div>
           </div>
 
