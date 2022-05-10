@@ -17,7 +17,6 @@ const createCoffeeStore = async (req, res) => {
 
         if (findCoffeeStoreRecords.length !== 0) {
           const records = getMinifiedRecords(findCoffeeStoreRecords);
-
           res.json(records);
         } else {
           //create a new record
