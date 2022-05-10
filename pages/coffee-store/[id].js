@@ -53,7 +53,7 @@ const CoffeeStore = (initialProps) => {
   const handleCreateCoffeeStore = async (coffeeStore) => {
     try {
 
-      const { fsq_id, name, voting, imgUrl, location, address  } = coffeeStore;
+      const { fsq_id, name, voting, imgUrl, location  } = coffeeStore;
       
       console.log('COFFEE STORE-', coffeeStore);
       console.log('LOCATION-', location);
@@ -92,8 +92,19 @@ const CoffeeStore = (initialProps) => {
           handleCreateCoffeeStore(coffeeStoreFromContext);
         }
       }
+    } else {
+      //static generated route SSG
+      handleCreateCoffeeStore(initialProps.coffeeStore);
     }
   }, [id, initialProps, initialProps.coffeeStore, coffeeStores]);
+
+  const [votingCount, setVotingCount] = useState(0);
+
+  const handleUpvoteButton = () => {
+    console.log("Upvote button clicked");
+    let count = votingCount + 1;
+    setVotingCount(count)
+  };
 
   if (router.isFallback) {
     return <div>Loading...</div>;
@@ -101,9 +112,6 @@ const CoffeeStore = (initialProps) => {
 
   const { name, location, imgUrl } = coffeeStore;
 
-  const handleUpvoteButton = () => {
-    console.log("Upvote button clicked");
-  };
 
   return (
     <>
@@ -147,7 +155,7 @@ const CoffeeStore = (initialProps) => {
               >
                 Up Vote!
               </button>
-              <span className="text-3xl font-bold text-yellow-500">0</span>
+              <span className="text-3xl font-bold text-yellow-500">{votingCount}</span>
             </div>
           </div>
 
