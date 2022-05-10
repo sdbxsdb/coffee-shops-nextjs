@@ -55,9 +55,6 @@ const CoffeeStore = (initialProps) => {
     try {
       const { fsq_id, name, voting, imgUrl, location } = coffeeStore;
 
-      console.log("COFFEE STORE-", coffeeStore);
-      console.log("LOCATION-", location);
-
       const response = await fetch("/api/createCoffeeStore", {
         method: "POST",
         headers: {
@@ -114,13 +111,36 @@ const CoffeeStore = (initialProps) => {
 
 
 
-
-
-
-  const handleUpvoteButton = () => {
+  const handleUpvoteButton = async () => {
     console.log("Upvote button clicked");
-    let count = votingCount + 1;
-    setVotingCount(count);
+
+    try {
+      // const { fsq_id } = coffeeStore;
+
+      const response = await fetch("/api/favouriteCoffeeStoreById", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: id,
+        }),
+      });
+
+      const dbCoffeeStore = await response.json();
+      console.log({ dbCoffeeStore });
+
+      if (dbCoffeeStore && dbCoffeeStore.length > 0) {
+        let count = votingCount + 1;
+        setVotingCount(count);
+      }
+ 
+    } catch (err) {
+      console.error("Error upvoting coffee store", err);
+    }
+
+
+   
   };
 
   if (error) {
