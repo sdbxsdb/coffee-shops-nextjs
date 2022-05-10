@@ -5,7 +5,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { fetchCoffeeStores } from "../../lib/coffee-stores";
 import { StoreContext } from "../../store/store-context";
-import { isEmpty } from "../../utils/index";
+import { fetcher, isEmpty } from "../../utils/index";
+import useSWR from "swr";
 
 export async function getStaticProps(staticProps) {
   const params = staticProps.params;
@@ -52,11 +53,10 @@ const CoffeeStore = (initialProps) => {
 
   const handleCreateCoffeeStore = async (coffeeStore) => {
     try {
+      const { fsq_id, name, voting, imgUrl, location } = coffeeStore;
 
-      const { fsq_id, name, voting, imgUrl, location  } = coffeeStore;
-      
-      console.log('COFFEE STORE-', coffeeStore);
-      console.log('LOCATION-', location);
+      console.log("COFFEE STORE-", coffeeStore);
+      console.log("LOCATION-", location);
 
       const response = await fetch("/api/createCoffeeStore", {
         method: "POST",
@@ -74,7 +74,7 @@ const CoffeeStore = (initialProps) => {
       });
 
       const dbCoffeeStore = await response.json();
-      console.log({dbCoffeeStore});
+      console.log({ dbCoffeeStore });
     } catch (err) {
       console.error("Error creating coffee store", err);
     }
@@ -100,18 +100,39 @@ const CoffeeStore = (initialProps) => {
 
   const [votingCount, setVotingCount] = useState(0);
 
+
+
+  const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, fetcher);
+  
+  useEffect(() => {
+    if (data && data.length > 0) {
+      console.log('data from SWR', data);
+      setCoffeeStore(data[0],);
+      setVotingCount(data[0].voting);
+    } 
+  }, [data]);
+
+
+
+
+
+
   const handleUpvoteButton = () => {
     console.log("Upvote button clicked");
     let count = votingCount + 1;
-    setVotingCount(count)
+    setVotingCount(count);
   };
+
+  if (error) {
+    return <div>failed to load page</div>;
+  }
 
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
   const { name, location, imgUrl } = coffeeStore;
-
+  
 
   return (
     <>
@@ -155,7 +176,9 @@ const CoffeeStore = (initialProps) => {
               >
                 Up Vote!
               </button>
-              <span className="text-3xl font-bold text-yellow-500">{votingCount}</span>
+              <span className="text-3xl font-bold text-yellow-500">
+                {votingCount}
+              </span>
             </div>
           </div>
 

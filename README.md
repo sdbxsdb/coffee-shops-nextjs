@@ -110,3 +110,43 @@ console.log(transformedData)
 ⭐️ Please note, ALL the V3 changes that will be covered in the upcoming lessons are also listed in this Pull Request so you can see these changes easily if you are curious to see what's coming:
 
 https://github.com/kulkarniankita/discover-coffee-stores/pull/3/files
+
+
+
+
+
+
+SWR:
+Important Note: Latest SWR Version: Breaking Changes
+Please note, if you are using the latest version of SWR (1.0.0 or higher), we DO need to provide fetch function to useSWR hook that we use. Otherwise SWR will not work for you.
+
+This is as a result of the latest version change. SWR's latest version update focuses on improving performance and they decided to remove fetch function as part of their package so need to provide it.
+
+
+
+Here is the PR for it which you can review to see how you can upgrade.
+
+https://github.com/kulkarniankita/discover-coffee-stores/pull/7
+
+
+
+Here are the main changes (which are also covered in the PR above):
+
+Notice how we provide a 2nd parameter called fetcher which is a function we define:
+
+const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, fetcher);
+
+
+
+fetcher function looks like this:
+
+export const fetcher = (url) => fetch(url).then((res) => res.json());
+
+
+
+If you are wondering how does URL from useSWR gets passed into fetcher then the above code is very similar to doing the below:
+
+const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, (url) => fetch(url).then((res) => res.json());
+
+When one function gets passed onto the other function as a parameter and that function only has 1 parameter then it's implied that URL will automatically be passed. This is a short hand notation of doing the same as above.
+
