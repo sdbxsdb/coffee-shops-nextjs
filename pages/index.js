@@ -9,7 +9,7 @@ import { ACTION_TYPES, StoreContext} from '../store/store-context';
 
 export async function getStaticProps(context) {
   const coffeeStores = await fetchCoffeeStores();
-  console.log(coffeeStores);
+  // console.log(coffeeStores);
 
   return {
     props: {
@@ -58,7 +58,7 @@ export default function Home(props) {
           //set coffee stores
         } catch (err) {
           setCoffeeStoresError(err.message);
-          console.log("err - ", err);
+          console.error("err - ", err);
         }
       }
     }

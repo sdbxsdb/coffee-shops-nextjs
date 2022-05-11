@@ -71,7 +71,7 @@ const CoffeeStore = (initialProps) => {
       });
 
       const dbCoffeeStore = await response.json();
-      console.log({ dbCoffeeStore });
+      // console.log({ dbCoffeeStore });
     } catch (err) {
       console.error("Error creating coffee store", err);
     }
@@ -112,7 +112,7 @@ const CoffeeStore = (initialProps) => {
 
 
   const handleUpvoteButton = async () => {
-    console.log("Upvote button clicked");
+    // console.log("Upvote button clicked");
 
     try {
       // const { fsq_id } = coffeeStore;
@@ -128,7 +128,7 @@ const CoffeeStore = (initialProps) => {
       });
 
       const dbCoffeeStore = await response.json();
-      console.log({ dbCoffeeStore });
+      // console.log({ dbCoffeeStore });
 
       if (dbCoffeeStore && dbCoffeeStore.length > 0) {
         let count = votingCount + 1;
@@ -151,7 +151,7 @@ const CoffeeStore = (initialProps) => {
     return <div>Loading...</div>;
   }
 
-  const { name, location, imgUrl } = coffeeStore;
+  const { name, address, neighborhood, imgUrl } = coffeeStore;
   
 
   return (
@@ -179,12 +179,12 @@ const CoffeeStore = (initialProps) => {
                 {name || "test"}
               </h1>
               <span className="text-blue-500 font-bold">
-                {location?.address}
+                {address}
               </span>
-              {location?.neighborhood && (
+              {neighborhood && (
                 <span className="text-blue-500 font-bold">
                   {" "}
-                  {location?.neighborhood}
+                  {neighborhood}
                 </span>
               )}
             </div>
