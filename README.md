@@ -150,3 +150,46 @@ const { data, error } = useSWR(`/api/getCoffeeStoreById?id=${id}`, (url) => fetc
 
 When one function gets passed onto the other function as a parameter and that function only has 1 parameter then it's implied that URL will automatically be passed. This is a short hand notation of doing the same as above.
 
+
+
+Important Note: Running Next Build
+Please note, as you run npm run build aka next build in the next lesson. You might see a bunch of lint errors that show up on your screen. This might distract you from seeing the actual output of your build. Let's fix that but first learn what is Lint?
+
+
+
+What is Lint:
+
+It allows you to setup rules for your code so you can create common coding conventions and it will help you detect common errors, setup coding styles format your code etc. Linting is very useful.
+
+What is ESLint:
+
+ESLint is a popular linter that allows you to set these rules easily
+
+Why is Next.js build throwing Lint errors?
+
+If you are wondering why Next.js build is throwing warnings/errors, well Next.js does recognize that having a linter is extremely important so after Next.js 11+ they have provided us the ability to ESLint. You can read more on the documentation here: https://nextjs.org/docs/basic-features/eslint
+
+      You can check all the conditions that ESLint will help configure: https://nextjs.org/docs/basic-features/eslint#eslint-config
+
+
+
+How to enable Lint?
+
+Here are the steps we can take to add the linter as shown in the docs to our project:
+
+Add next lint as a script to package.json
+
+We can select "Strict" as option as that is the recommended setting. You can also learn more in the docs.
+
+Next.js will automatically install eslint and eslint-config-next as development dependencies in your application and create an .eslintrc.json file in the root of your project that includes your selected configuration.
+
+Then run npm run lint which will you a output of all the errors and warnings
+
+Once ESLint has been set up, it will also automatically run during every build (next build). Errors will fail the build, while warnings will not.
+
+How to fix the warnings and errors?
+
+I have created a PR for us that fixes all the errors: https://github.com/kulkarniankita/discover-coffee-stores/pull/11All the commits are divided into the Lint errors/warnings you will see after running either npm run lintThis will allow you to learn how to fix every warning/error yourself!
+
+
+
