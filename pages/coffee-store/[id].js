@@ -51,6 +51,7 @@ const CoffeeStore = (initialProps) => {
     state: { coffeeStores },
   } = useContext(StoreContext);
 
+
   const handleCreateCoffeeStore = async (coffeeStore) => {
     try {
       const { fsq_id, name, voting, imgUrl, location } = coffeeStore;
@@ -65,7 +66,7 @@ const CoffeeStore = (initialProps) => {
           name,
           voting: 0,
           imgUrl,
-          neighborhood: location?.neighborhood?.[0] || "No neighborhood",
+          neighborhood: location?.neighborhood?.[0] || "",
           address: location?.address,
         }),
       });
@@ -103,7 +104,7 @@ const CoffeeStore = (initialProps) => {
   
   useEffect(() => {
     if (data && data.length > 0) {
-      console.log('data from SWR', data);
+      // console.log('data from SWR', data);
       setCoffeeStore(data[0],);
       setVotingCount(data[0].voting);
     } 
@@ -134,13 +135,12 @@ const CoffeeStore = (initialProps) => {
         let count = votingCount + 1;
         setVotingCount(count);
       }
- 
+
     } catch (err) {
       console.error("Error upvoting coffee store", err);
     }
 
 
-   
   };
 
   if (error) {
@@ -151,8 +151,9 @@ const CoffeeStore = (initialProps) => {
     return <div>Loading...</div>;
   }
 
-  const { name, address, neighborhood, imgUrl } = coffeeStore;
+  const { name, address, neighborhood, imgUrl, location, } = coffeeStore;
   
+  // console.log('coffeeSTORE', coffeeStore);
 
   return (
     <>
@@ -160,6 +161,7 @@ const CoffeeStore = (initialProps) => {
         <title>{name} | Coffee Store Locations</title>
       </Head>
 
+    
       <div className="mt-12 ">
         <div className="mb-12 max-w-max hover:-ml-2 transition-all duration-300 ease-in-out active:scale-95">
           <Link href="/">
@@ -174,17 +176,19 @@ const CoffeeStore = (initialProps) => {
 
         <div>
           <div className="mb-12 flex flex-col md:flex-row justify-between items-center gap-x-4">
+
+            
             <div className="flex flex-1 flex-col text-center md:text-left">
               <h1 className="text-3xl text-yellow-500 font-bold">
                 {name || "test"}
               </h1>
               <span className="text-blue-500 font-bold">
-                {address}
+                {address || location?.address}
               </span>
-              {neighborhood && (
+              {(neighborhood || location?.neighborhood) && (
                 <span className="text-blue-500 font-bold">
                   {" "}
-                  {neighborhood}
+                  {neighborhood || location?.neighborhood}
                 </span>
               )}
             </div>
